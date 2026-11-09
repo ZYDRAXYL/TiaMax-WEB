@@ -1,0 +1,187 @@
+{
+  "$schema": "./chain.schema.json",
+  "chainVersion": "0.1.0",
+  "org": "ZYDRAXYL",
+  "self": "WEB",
+  "repos": {
+    "APP": {
+      "repo": "TiaMax-APP",
+      "role": "hub",
+      "private": true,
+      "owns": [
+        ".claude/",
+        "chain/",
+        "docs/",
+        "process/",
+        "tools/"
+      ],
+      "releases": null,
+      "versionSource": null
+    },
+    "SDB": {
+      "repo": "TiaMax-SDB",
+      "role": "schema",
+      "private": false,
+      "owns": [
+        "schema/",
+        "supabase/",
+        "assets/",
+        "generated/"
+      ],
+      "releases": "sdb-v*",
+      "versionSource": "sdb.json#sdbVersion"
+    },
+    "TRX": {
+      "repo": "TiaMax-TRX",
+      "role": "service",
+      "private": false,
+      "owns": [
+        "netlify/",
+        "public/",
+        "netlify.toml"
+      ],
+      "releases": null,
+      "versionSource": "package.json#version"
+    },
+    "EXE": {
+      "repo": "TiaMax-EXE",
+      "role": "app",
+      "private": true,
+      "owns": [
+        "electron/"
+      ],
+      "releases": "v*",
+      "versionSource": "package.json#version"
+    },
+    "PWA": {
+      "repo": "TiaMax-PWA",
+      "role": "build",
+      "private": false,
+      "owns": [
+        "tools/",
+        "shim/",
+        "dist/"
+      ],
+      "releases": null,
+      "versionSource": "package.json#version"
+    },
+    "PKG": {
+      "repo": "TiaMax-PKG",
+      "role": "content",
+      "private": false,
+      "owns": [
+        "packages/",
+        "index.json"
+      ],
+      "releases": "pkg-v*",
+      "versionSource": "package.json#version"
+    },
+    "WEB": {
+      "repo": "TiaMax-WEB",
+      "role": "site",
+      "private": false,
+      "owns": [
+        "*.html",
+        "assets/"
+      ],
+      "releases": "mirror",
+      "versionSource": null
+    }
+  },
+  "chains": {
+    "exe": [
+      "APP",
+      [
+        "SDB",
+        "TRX"
+      ],
+      "EXE",
+      [
+        "PKG",
+        "WEB",
+        "PWA"
+      ]
+    ],
+    "pwa": [
+      "APP",
+      [
+        "SDB",
+        "TRX"
+      ],
+      [
+        "EXE"
+      ],
+      "PWA",
+      "WEB"
+    ]
+  },
+  "edges": [
+    {
+      "from": "APP",
+      "to": "SDB",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "EXE",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "PWA",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "PKG",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "WEB",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "TRX",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "SDB",
+      "to": "EXE",
+      "carries": "generated-schema"
+    },
+    {
+      "from": "TRX",
+      "to": "EXE",
+      "carries": "transfer-api"
+    },
+    {
+      "from": "EXE",
+      "to": "PKG",
+      "carries": "package-targets"
+    },
+    {
+      "from": "EXE",
+      "to": "WEB",
+      "carries": "release-mirror"
+    },
+    {
+      "from": "EXE",
+      "to": "PWA",
+      "carries": "app-source"
+    },
+    {
+      "from": "PWA",
+      "to": "WEB",
+      "carries": "app-source"
+    }
+  ],
+  "propagation": {
+    "mode": "pull-request",
+    "label": "chained-update",
+    "tokenSecret": "CHAIN_TOKEN",
+    "trailerPrefix": "Chained-From",
+    "syncState": "chain/.chain-sync.json"
+  }
+}
