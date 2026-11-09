@@ -86,6 +86,89 @@
       ],
       "releases": "mirror",
       "versionSource": null
+    },
+    "DOCS": {
+      "repo": "TiaMax-DOCS",
+      "private": false,
+      "role": "docs",
+      "owns": [
+        "compatibility-matrix.md",
+        "shared/",
+        "architecture/"
+      ],
+      "releases": null,
+      "versionSource": null
+    },
+    "PLATFORM": {
+      "repo": "TiaMax-PLATFORM",
+      "private": false,
+      "role": "library",
+      "owns": [
+        "include/zx/platform/",
+        "src/",
+        "tests/"
+      ],
+      "releases": "v*",
+      "versionSource": "CMakeLists.txt#project.VERSION"
+    },
+    "LANG": {
+      "repo": "TiaMax-LANG",
+      "private": false,
+      "role": "library",
+      "owns": [
+        "include/zx/lang/",
+        "src/",
+        "tests/"
+      ],
+      "releases": "v*",
+      "versionSource": "CMakeLists.txt#project.VERSION"
+    },
+    "FRAMEWORK": {
+      "repo": "TiaMax-FRAMEWORK",
+      "private": false,
+      "role": "library",
+      "owns": [
+        "include/zx/framework/",
+        "src/",
+        "tests/"
+      ],
+      "releases": "v*",
+      "versionSource": "CMakeLists.txt#project.VERSION"
+    },
+    "ENGINE": {
+      "repo": "TiaMax-ENGINE",
+      "private": false,
+      "role": "superbuild",
+      "owns": [
+        "superbuild/",
+        "include/zx/engine/",
+        "src/",
+        "tests/"
+      ],
+      "releases": "v*",
+      "versionSource": "CMakeLists.txt#project.VERSION"
+    },
+    "TOOLS": {
+      "repo": "TiaMax-TOOLS",
+      "private": false,
+      "role": "tools",
+      "owns": [
+        "src/",
+        "tests/"
+      ],
+      "releases": "v*",
+      "versionSource": "CMakeLists.txt#project.VERSION"
+    },
+    "TOOLCHAIN": {
+      "repo": "TiaMax-TOOLCHAIN",
+      "private": false,
+      "role": "service",
+      "owns": [
+        "src/",
+        "tests/"
+      ],
+      "releases": "v*",
+      "versionSource": "CMakeLists.txt#project.VERSION"
     }
   },
   "chains": {
@@ -113,6 +196,21 @@
       ],
       "PWA",
       "WEB"
+    ],
+    "engine": [
+      "APP",
+      "DOCS",
+      [
+        "PLATFORM",
+        "LANG"
+      ],
+      "FRAMEWORK",
+      "ENGINE",
+      [
+        "TOOLS",
+        "TOOLCHAIN"
+      ],
+      "EXE"
     ]
   },
   "edges": [
@@ -175,6 +273,116 @@
       "from": "PWA",
       "to": "WEB",
       "carries": "app-source"
+    },
+    {
+      "from": "APP",
+      "to": "DOCS",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "PLATFORM",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "LANG",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "FRAMEWORK",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "ENGINE",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "TOOLS",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "APP",
+      "to": "TOOLCHAIN",
+      "carries": "claude-tooling"
+    },
+    {
+      "from": "DOCS",
+      "to": "PLATFORM",
+      "carries": "shared-config"
+    },
+    {
+      "from": "DOCS",
+      "to": "LANG",
+      "carries": "shared-config"
+    },
+    {
+      "from": "DOCS",
+      "to": "FRAMEWORK",
+      "carries": "shared-config"
+    },
+    {
+      "from": "DOCS",
+      "to": "ENGINE",
+      "carries": "shared-config"
+    },
+    {
+      "from": "DOCS",
+      "to": "TOOLS",
+      "carries": "shared-config"
+    },
+    {
+      "from": "DOCS",
+      "to": "TOOLCHAIN",
+      "carries": "shared-config"
+    },
+    {
+      "from": "PLATFORM",
+      "to": "FRAMEWORK",
+      "carries": "pinned-tag"
+    },
+    {
+      "from": "PLATFORM",
+      "to": "ENGINE",
+      "carries": "pinned-tag"
+    },
+    {
+      "from": "LANG",
+      "to": "ENGINE",
+      "carries": "pinned-tag"
+    },
+    {
+      "from": "FRAMEWORK",
+      "to": "ENGINE",
+      "carries": "pinned-tag"
+    },
+    {
+      "from": "ENGINE",
+      "to": "TOOLS",
+      "carries": "pinned-tag"
+    },
+    {
+      "from": "ENGINE",
+      "to": "TOOLCHAIN",
+      "carries": "pinned-tag"
+    },
+    {
+      "from": "ENGINE",
+      "to": "EXE",
+      "carries": "engine-build"
+    },
+    {
+      "from": "TOOLS",
+      "to": "EXE",
+      "carries": "tool-binaries"
+    },
+    {
+      "from": "TOOLCHAIN",
+      "to": "EXE",
+      "carries": "launcher"
     }
   ],
   "propagation": {
